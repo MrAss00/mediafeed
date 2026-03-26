@@ -70,7 +70,6 @@ class ImageAdapter(
         else if(holder is FeedVH){
             holder.bind(item)
         }
-        TODO("Get the data at the given position and call the holder's bind method")
     }
 
     inner class GridVH(itemView: View) : RecyclerView.ViewHolder(itemView) {

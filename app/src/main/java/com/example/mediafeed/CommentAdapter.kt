@@ -1,5 +1,6 @@
 package com.example.mediafeed
 
+import android.text.Layout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,7 +21,6 @@ class CommentAdapter(private var items: List<String>) :
     // =======================================================================
     override fun getItemCount(): Int {
         return items.size
-        TODO("Return the list size")
     }
 
     // =======================================================================
@@ -28,7 +28,8 @@ class CommentAdapter(private var items: List<String>) :
     // Hint: Use LayoutInflater to inflate R.layout.item_comment, then return VH
     // =======================================================================
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
-        TODO("Inflate item_comment layout and return a VH instance")
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_comment, parent, false)
+        return VH(view)
     }
 
     // =======================================================================
@@ -36,7 +37,7 @@ class CommentAdapter(private var items: List<String>) :
     // Hint: Call holder.bind(items[position])
     // =======================================================================
     override fun onBindViewHolder(holder: VH, position: Int) {
-        TODO("Call the holder's bind method with the data at the given position")
+        holder.bind(items[position])
     }
 
     class VH(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -47,7 +48,7 @@ class CommentAdapter(private var items: List<String>) :
         // Hint: Set the given text to the tv (TextView)
         // ===================================================================
         fun bind(text: String) {
-            TODO("Display the text on the TextView")
+            tv.text = "IDK what this has to be set"
         }
     }
 }

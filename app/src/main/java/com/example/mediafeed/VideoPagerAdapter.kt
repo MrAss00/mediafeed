@@ -21,7 +21,8 @@ class VideoPagerAdapter(
     // Hint: Return the size of the items list
     // =======================================================================
     override fun getItemCount(): Int {
-        TODO("Return the video list size")
+        return items.size
+
     }
 
     // =======================================================================
@@ -29,7 +30,8 @@ class VideoPagerAdapter(
     // Hint: Inflate R.layout.item_video_page and return a VideoVH
     // =======================================================================
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VideoVH {
-        TODO("Inflate item_video_page layout and return a VideoVH")
+        val v = LayoutInflater.from(parent.context).inflate(R.layout.item_video_page, parent, false)
+        return VideoVH(v)
     }
 
     // =======================================================================
@@ -37,7 +39,7 @@ class VideoPagerAdapter(
     // Hint: Call holder.bind(items[position])
     // =======================================================================
     override fun onBindViewHolder(holder: VideoVH, position: Int) {
-        TODO("Pass the data at the given position to holder.bind")
+        holder.bind(items[position])
     }
 
     inner class VideoVH(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -63,6 +65,25 @@ class VideoPagerAdapter(
         //   5. On btnComment click: call onOpenComments(post)
         // ===================================================================
         fun bind(post: VideoPost) {
+            tvTitle.text = post.name
+
+            val liked = store.isLiked(MediaType.VIDEO, post.id)
+            tvLike.text = if(liked) "1" else "0"
+            btnLike.setColorFilter(if(liked) Color.RED else Color.WHITE)
+
+            tvComment.text = store.commentsCount(MediaType.VIDEO, post.id).toString()
+
+            btnLike.setOnClickListener {
+                val LikedNow = store.toggleLike(MediaType.VIDEO,post.id)
+                tvLike.text = if(LikedNow) "1" else "0"
+                btnLike.setColorFilter(if(LikedNow) Color.RED else Color.WHITE)
+
+            }
+
+            btnComment.setOnClickListener {
+                onOpenComments(post)
+            }
+
             TODO("Set title, like state, comment count. Note the special click handling for ViewPager2")
         }
     }
