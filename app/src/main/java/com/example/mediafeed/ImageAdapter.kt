@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.constraintlayout.helper.widget.Grid
 import androidx.recyclerview.widget.RecyclerView
 
 class ImageAdapter(
@@ -62,7 +63,13 @@ class ImageAdapter(
     //   - If FeedVH, call holder.bind(post)
     // =======================================================================
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-
+        val item = items[position]
+        if(holder is GridVH){
+            holder.bind(item, position)
+        }
+        else if(holder is FeedVH){
+            holder.bind(item)
+        }
         TODO("Get the data at the given position and call the holder's bind method")
     }
 
@@ -95,7 +102,27 @@ class ImageAdapter(
         //   6. On btnComment click: call onOpenComments(post)
         // ===================================================================
         fun bind(post: ImagePost) {
-            TODO("Set image, name, like state, comment count, and button click listeners")
+            iv.setImageResource(post.drawableRes)
+            tvName.text = post.name
+            if(store.isLiked(MediaType.IMAGE, post.id)) {
+                tvLike.text ="1"
+                btnLike.setColorFilter(Color.RED)
+            }
+            else{
+                tvLike.text= "0"
+                btnLike.setColorFilter(Color.DKGRAY)
+            }
+            tvComment.text = store.commentsCount(MediaType.IMAGE, post.id).toString()
+            btnLike.setOnClickListener {
+                val position = bindingAdapterPosition
+                // when click, like +1
+                store.toggleLike(MediaType.IMAGE, post.id)
+                notifyItemChanged(position)
+            }
+
+            btnComment.setOnClickListener {
+                onOpenComments(post)
+            }
         }
     }
 }

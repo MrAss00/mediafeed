@@ -19,6 +19,7 @@ class CommentAdapter(private var items: List<String>) :
     // Hint: Return the size of the items list
     // =======================================================================
     override fun getItemCount(): Int {
+        return items.size
         TODO("Return the list size")
     }
 
