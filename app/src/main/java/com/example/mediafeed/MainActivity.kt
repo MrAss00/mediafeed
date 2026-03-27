@@ -29,7 +29,6 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btnVideo).setOnClickListener {
             val intent = Intent(this, VideoActivity::class.java)
             startActivity(intent)
-            TODO("Use Intent to navigate to VideoActivity")
         }
     }
 }

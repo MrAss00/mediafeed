@@ -83,8 +83,6 @@ class VideoPagerAdapter(
             btnComment.setOnClickListener {
                 onOpenComments(post)
             }
-
-            TODO("Set title, like state, comment count. Note the special click handling for ViewPager2")
         }
     }
 }

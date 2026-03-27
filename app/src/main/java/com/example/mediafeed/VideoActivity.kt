@@ -1,9 +1,11 @@
 package com.example.mediafeed
 
 import android.os.Bundle
+import androidx.annotation.OptIn
 import androidx.appcompat.app.AppCompatActivity
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
+import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.RawResourceDataSource
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.recyclerview.widget.RecyclerView
@@ -32,14 +34,18 @@ class VideoActivity : AppCompatActivity() {
         //   - Set repeatMode = Player.REPEAT_MODE_ONE (loop current video)
         //   - Set playWhenReady = true (auto-play when ready)
         // ===================================================================
-        TODO("Initialize ExoPlayer and configure looping playback")
+
+        player = ExoPlayer.Builder(this).build()
+        player.repeatMode = Player.REPEAT_MODE_ONE
+        player.playWhenReady = true
+
 
         viewPager = findViewById(R.id.viewPager)
         // ===================================================================
         // TODO 4b: Set ViewPager2 to vertical orientation
         // Hint: viewPager.orientation = ViewPager2.ORIENTATION_VERTICAL
         // ===================================================================
-        TODO("Set ViewPager2 to vertical scrolling (TikTok style)")
+        viewPager.orientation = ViewPager2.ORIENTATION_VERTICAL
 
         adapter = VideoPagerAdapter(
             store = store,
@@ -59,7 +65,14 @@ class VideoActivity : AppCompatActivity() {
         //      - Call viewPager.post { playAt(position) }
         //   4. Also play the first page: viewPager.post { playAt(0) }
         // ===================================================================
-        TODO("Register OnPageChangeCallback and call playAt when the page changes")
+        viewPager.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback(){
+            override fun onPageSelected(position: Int){
+                currentPos = position
+                viewPager.post{playAt(position)}
+            }
+        })
+
+        viewPager.post { playAt(0) }
     }
 
     override fun onResume() {
@@ -79,8 +92,20 @@ class VideoActivity : AppCompatActivity() {
     //   6. Build URI: RawResourceDataSource.buildRawResourceUri(post.rawRes)
     //   7. Set and play: player.setMediaItem(...) -> player.prepare() -> player.play()
     // =======================================================================
+
+    @OptIn(UnstableApi::class)
     private fun playAt(position: Int) {
-        TODO("Get the current page's ViewHolder, bind ExoPlayer, load video and play")
+        val rv = viewPager.getChildAt(0) as? RecyclerView ?: return
+        val holder = rv.findViewHolderForAdapterPosition(position) as? VideoPagerAdapter.VideoVH
+        currentHolder?.playerView?.player = null
+        holder?.playerView?.player = player
+        currentHolder = holder
+        val post = adapter.items[position]
+
+        val uri = RawResourceDataSource.buildRawResourceUri(post.rawRes)
+        player.setMediaItem(MediaItem.fromUri(uri))
+        player.prepare()
+        player.play()
     }
 
     override fun onStop() {

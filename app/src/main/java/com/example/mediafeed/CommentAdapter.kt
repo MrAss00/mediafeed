@@ -48,7 +48,7 @@ class CommentAdapter(private var items: List<String>) :
         // Hint: Set the given text to the tv (TextView)
         // ===================================================================
         fun bind(text: String) {
-            tv.text = "IDK what this has to be set"
+            tv.text = text
         }
     }
 }
