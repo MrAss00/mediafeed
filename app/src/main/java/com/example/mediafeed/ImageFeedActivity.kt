@@ -39,7 +39,10 @@ class ImageFeedActivity : AppCompatActivity() {
         //   2. Set the adapter to recycler.adapter
         //   3. Call setGridMode(false) to set the initial mode to Feed
         // ===================================================================
-        TODO("Create an ImageAdapter instance, attach it to the recycler, and set the initial layout mode")
+        adapter = ImageAdapter(store, { post -> CommentActivity.start(this,MediaType.IMAGE, post.id, post.name) },{ position -> setGridMode(false); recycler.scrollToPosition(position) })
+        recycler.adapter = adapter
+        setGridMode(false)
+
     }
 
     override fun onResume() {
@@ -59,7 +62,17 @@ class ImageFeedActivity : AppCompatActivity() {
     //   5. Call invalidateOptionsMenu() to update the menu icon
     // =======================================================================
     private fun setGridMode(grid: Boolean) {
-        TODO("Switch the recycler's LayoutManager and refresh the adapter")
+        isGridMode = grid
+        recycler.layoutManager = if(isGridMode){
+            GridLayoutManager(this, 3)
+        }
+        else{
+            LinearLayoutManager(this)
+        }
+        adapter.isGridMode = grid
+        adapter.notifyDataSetChanged()
+        invalidateOptionsMenu()
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

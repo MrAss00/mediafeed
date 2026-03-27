@@ -18,7 +18,8 @@ class LocalStore(context: Context) {
     //       The second argument (false) is the default value (not liked)
     // =======================================================================
     fun isLiked(type: MediaType, id: String): Boolean {
-        TODO("Read like state from SharedPreferences")
+        return prefs.getBoolean(likeKey(type, id), false)
+
     }
 
     // =======================================================================
@@ -29,7 +30,9 @@ class LocalStore(context: Context) {
     //   3. Return the new value
     // =======================================================================
     fun toggleLike(type: MediaType, id: String): Boolean {
-        TODO("Toggle like state and save to SharedPreferences")
+         val newValue = !isLiked(type,id)
+        prefs.edit().putBoolean(likeKey(type, id), newValue).apply()
+        return newValue
     }
 
     // =======================================================================
@@ -40,7 +43,9 @@ class LocalStore(context: Context) {
     //   3. Return: gson.fromJson(json, token)
     // =======================================================================
     fun getComments(type: MediaType, id: String): MutableList<String> {
-        TODO("Read JSON from SharedPreferences and deserialize into a comment list")
+        val json = prefs.getString(commentsKey(type, id), "[]")
+        val token = object : TypeToken<MutableList<String>>() {}.type
+        return gson.fromJson(json, token)
     }
 
     // =======================================================================
@@ -52,7 +57,10 @@ class LocalStore(context: Context) {
     //   4. Save: prefs.edit().putString(commentsKey(type, id), json).apply()
     // =======================================================================
     fun addComment(type: MediaType, id: String, comment: String) {
-        TODO("Add comment to the list, serialize, and save to SharedPreferences")
+        val list = getComments(type, id)
+        list.add(comment)
+        val json = gson.toJson(list)
+        prefs.edit().putString(commentsKey(type, id), json).apply()
     }
 
     // =======================================================================
@@ -60,6 +68,7 @@ class LocalStore(context: Context) {
     // Hint: Call getComments() and return .size
     // =======================================================================
     fun commentsCount(type: MediaType, id: String): Int {
-        TODO("Return the comment count")
+        val list = getComments(type, id);
+        return list.size
     }
 }
